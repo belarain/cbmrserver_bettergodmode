@@ -679,6 +679,22 @@ enum NPCTypes
 	NPCTypeApache = 18, NPCTypeClerk = 19, NPCTypeD = 20, NPCTypeGuard = 21, NPCTypeMTF = 22
 }
 
+enum Fonts
+{
+	Font_Default = 0,
+	Font_Default_Big = 1,
+	Font_Digital = 2,
+	Font_Digital_Big = 3,
+	Font_Journal = 4,
+	Font_Console = 5,
+	Font_Credits = 6,
+	Font_Credits_Big = 7,
+	Font_Tahoma = 8,
+	Font_Icons = 9,
+	Font_Default_Medium = 10,
+	Font_Icons_Big = 11
+}
+
 const float ROOM_SCALE = 8.0 / 2048.0;
 
 // Players range is 1..120
