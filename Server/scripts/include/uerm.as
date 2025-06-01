@@ -351,7 +351,8 @@ enum RoomIdentifiers
 	r_dimension_106 = 111, r_dimension_1499 = 112,
 	r_room2_closets_2 = 113,
 	//
-	r_gate_a_b = 114
+	r_gate_a_b = 114,
+	r_RESERVED = 115
 }
 
 enum EventIdentifiers
@@ -598,7 +599,8 @@ enum ItemsIdentifiers
 	it_mp7 = 119,
 	it_handcuffs = 120,
 	it_m134 = 121,
-	it_remington = 122
+	it_remington = 122,
+	it_RESERVED	= 123, it_RESERVED2 = 124
 }
 
 enum DoorTypes
