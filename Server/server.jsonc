@@ -23,6 +23,7 @@
 		"password": "",
 		"improvedgates": false,
 		"mapsize": 21, // 6-28 is allowed. 21 is default. (small - 14) (medium - 18) (big - 22) With small map sizes it is very possible for important rooms to not appear, so keep this in mind when shrinking the map.
-		"masterserver": 65535 // Port for Steam master server. (65535 using main server port, so its recommended to not change this). Set 0 to disable
+		"masterserver": 65535, // Port for Steam master server. (65535 using main server port, so its recommended to not change this). Set 0 to disable
+		"description": ""
     }
 }
