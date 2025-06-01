@@ -63,7 +63,7 @@ void RegisterMethod(string declaration, string proc)
 
 void RegisterFunction(string declaration, string proc)
 {
-	RegisterLibraryFunction(declaration, GetProcAddress(currentlib, proc), convtype);
+	RegisterLibraryFunction(declaration, GetProcAddress(currentlib, proc),convtype);
 }
 
 void RegisterClass(string decl, string get, string proc)
