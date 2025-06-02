@@ -301,7 +301,7 @@ void UpdatePlayerRole(Player p)
 				p.GetRoom().IsAdjacent(dest.GetRoom()) && 
 				!dest.IsBlinking() && 
 				p.GetHitbox().InView(dest.GetHead()) && 
-				dest.GetHead().Visible(p.GetEntity())) {
+				(dest.GetHead().Visible(p.GetEntity()) || dest.GetHead().Visible(p.GetHead()))) {
 					visible = true;
 					break;
 				}
