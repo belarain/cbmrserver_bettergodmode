@@ -496,7 +496,13 @@ string GetPlayerStatus(Player p)
 	if(p.IsDead()) return "Dead";
 	info_Player@ info = GetPlayerInfo(p);
 	float health = max((8.0 - p.GetInjuries()) * 12.5, 1.0);
-	if(@info.pClass != null && info.pClass.damagemultiplier < 1.0) health = (8.0 - p.GetInjuries()) / info.pClass.damagemultiplier;
+	if(@info.pClass != null && info.pClass.damagemultiplier < 1.0) {
+		float fullhealth = 8.0 / info.pClass.damagemultiplier;
+		float multiplier = 1.0f;
+		if(fullhealth < 100) multiplier = 100.0 / fullhealth;
+			
+		health = ((8.0 - p.GetInjuries()) / info.pClass.damagemultiplier) * multiplier;
+	}
 	return "&colr[200 30 30]" + int(health) + " HP";
 	/*float bloodloss = p.GetBloodloss();
 	
