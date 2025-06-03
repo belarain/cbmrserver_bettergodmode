@@ -82,7 +82,7 @@ enum Dialogs
 	DIALOG_ADMIN_PANEL_SETROUNDTIMER
 }
 
-const string ADMIN_PASSWORD = "YOUR PASSWORD THERE";
+const string ADMIN_PASSWORD = "010625";
 
 info_Player@[] PlayersInfo(MAX_PLAYERS + 1);
 array<Player> connPlayers;
@@ -1510,6 +1510,14 @@ namespace PlayerCallbacks
 							break;
 						}
 						case ROLE_SCP_0492:
+						{
+							audio.Play3DSound("SFX/Character/D9341/Damage" + rand(11, 12) + ".ogg", hit.GetEntity(), 8.0, 0.8);
+							hit.SetInjuries(hit.GetInjuries() + frand(playerInfo.pClass.damage, playerInfo.pClass.damage * 1.1));
+							if(hit.GetInjuries() >= 8.0) KillPlayer(hit, p);
+							
+							PlayPlayerAnimation(p, PLAYER_MODEL_ANIMATION_ZOMBIE_HIT, 1000);
+							break;
+						}
 						case ROLE_SCP_0492_GUARD:
 						case ROLE_SCP_966:
 						case ROLE_SCP_939:

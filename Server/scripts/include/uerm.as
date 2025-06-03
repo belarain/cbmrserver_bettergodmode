@@ -31,7 +31,8 @@ enum Callbacks
 	PlayerSelectItem_c		= 29,
 	ServerConsole_c			= 30,
 	ServerRestart_c			= 31,
-	PlayerShootNPC_c		= 32
+	PlayerShootNPC_c		= 32,
+	PlayerKeyAction_c		= 33
 }
 
 const string[] EventCallbacks = 
@@ -68,7 +69,8 @@ const string[] EventCallbacks =
 	"OnPlayerSelectItem",
 	"OnServerConsole",
 	"OnServerRestart",
-	"OnPlayerShootNPC"
+	"OnPlayerShootNPC",
+	"OnPlayerKeyAction"
 };
 
 // You can register a callback for an indefinite number of functions.
@@ -116,6 +118,7 @@ void RegisterAllCallbacks()
 	RegisterCallback(ServerConsole_c);
 	RegisterCallback(ServerRestart_c);
 	RegisterCallback(PlayerShootNPC_c);
+	RegisterCallback(PlayerKeyAction_c);
 }
 
 enum Dialog
@@ -199,7 +202,8 @@ enum PlayerAnimations
 	PLAYER_MODEL_ANIMATION_WALK_ARMED_RIFLE = 16,
 	PLAYER_MODEL_ANIMATION_RUN_ARMED_RIFLE = 17,
 	PLAYER_MODEL_ANIMATION_SITTING_IDLE_ARMED_RIFLE = 18,
-	PLAYER_MODEL_ANIMATION_SITTING_WALK_ARMED_RIFLE = 19
+	PLAYER_MODEL_ANIMATION_SITTING_WALK_ARMED_RIFLE = 19,
+	PLAYER_MODEL_ANIMATION_ZOMBIE_HIT = 20
 }
 enum DefaultAttaches
 {
@@ -693,6 +697,18 @@ enum Fonts
 	Font_Icons = 9,
 	Font_Default_Medium = 10,
 	Font_Icons_Big = 11
+}
+
+enum KeysTypes
+{
+	KEY_U,
+	KEY_I,
+	KEY_O,
+	KEY_P,
+	KEY_N,
+	KEY_M,
+	KEY_F2,
+	KEY_F4
 }
 
 const float ROOM_SCALE = 8.0 / 2048.0;
