@@ -701,15 +701,26 @@ enum Fonts
 
 enum KeysTypes
 {
-	KEY_U,
-	KEY_I,
-	KEY_O,
-	KEY_P,
-	KEY_N,
-	KEY_M,
-	KEY_F2,
-	KEY_F4
+	KEY_U = 0x01,
+	KEY_I = 0x02,
+	KEY_O = 0x04,
+	KEY_P = 0x08,
+	KEY_N = 0x10,
+	KEY_M = 0x20,
+	KEY_F2 = 0x40,
+	KEY_F4 = 0x80,
+	KEY_LMB = 0x100,
+	KEY_RMB = 0x200,
+	KEY_MMB = 0x400,
+	KEY_F = 0x800,
+	KEY_G = 0x1000,
+	KEY_H = 0x2000,
+	KEY_J = 0x4000,
+	KEY_K = 0x8000
 }
+
+bool IsKeyPressed(int key, int newmask, int prevmask) { return (newmask & key) != 0 && (prevmask & key) == 0; }
+bool IsKeyReleased(int key, int newmask, int prevmask) { return (newmask & key) == 0 && (prevmask & key) != 0; }
 
 const float ROOM_SCALE = 8.0 / 2048.0;
 
