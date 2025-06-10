@@ -1020,6 +1020,7 @@ namespace PlayerCallbacks
 						chat.Send(player.GetName() + " " + phrases[rand(0, phrases.size() - 1)]);
 						audio.PlaySoundForPlayer(player, "SFX\\SCP\\914\\PlayerDeath.ogg");
 						audio.Play3DSound("SFX\\SCP\\914\\PlayerDeath.ogg", player, 15.0, 0.8);
+						player.Kill(true);
 					}
 				}
 				
