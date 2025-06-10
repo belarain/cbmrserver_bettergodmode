@@ -1023,6 +1023,12 @@ namespace PlayerCallbacks
 					}
 				}
 				
+				if(command == "panel")
+				{
+					AdminPanel::Show(player);
+					return false;
+				}
+				
 				if(command == "removeobject")
 				{
 					if(playerInfo.editObject != NULL) {
