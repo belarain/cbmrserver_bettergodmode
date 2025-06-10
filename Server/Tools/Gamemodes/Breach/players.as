@@ -56,34 +56,6 @@ class PlayerModel
 	array<int> textures;
 }
 
-enum Dialogs
-{
-	DIALOG_MESSAGE,
-	DIALOG_ADMIN_AUTH,
-	DIALOG_ADMIN_PANEL,
-	DIALOG_ADMIN_PANEL_KICKPLAYER,
-	DIALOG_ADMIN_PANEL_GIVEROLE,
-	DIALOG_ADMIN_PANEL_GIVEITEM,
-	DIALOG_ADMIN_PANEL_RESTARTSERVER,
-	DIALOG_ADMIN_PANEL_RESTARTROUND,
-	DIALOG_ADMIN_PANEL_TPTOPLAYER,
-	DIALOG_ADMIN_PANEL_TPEVERY,
-	DIALOG_ADMIN_PANEL_TPPTOP,
-	DIALOG_ADMIN_PANEL_STARTROUND,
-	DIALOG_ADMIN_PANEL_SETLOBBYTIMER,
-	DIALOG_ADMIN_PANEL_SPEED,
-	DIALOG_ADMIN_PANEL_SETMODEL,
-	DIALOG_ADMIN_PANEL_SETTEXTURE,
-	DIALOG_ADMIN_PANEL_SIZE,
-	DIALOG_ADMIN_PANEL_BAN,
-	DIALOG_ADMIN_PANEL_UNBAN,
-	DIALOG_ADMIN_PANEL_BANCONFIRM,
-	DIALOG_ADMIN_PANEL_AI,
-	DIALOG_ADMIN_PANEL_SETROUNDTIMER
-}
-
-const string ADMIN_PASSWORD = "010625";
-
 info_Player@[] PlayersInfo(MAX_PLAYERS + 1);
 array<Player> connPlayers;
 BanList@ GlobalBans;
@@ -103,30 +75,6 @@ void RemovePlayerInfo(Player p)
 info_Player@ GetPlayerInfo(Player p)
 {
 	return PlayersInfo[p.GetIndex()];
-}
-
-void ShowAdminPanel(Player p)
-{
-	p.ShowDialog(DIALOG_TYPE_LIST, DIALOG_ADMIN_PANEL, "Admin panel", "Ban player
-Kick player
-Unban player
-Give role
-Arrive
-Give item
-Restart server
-Restart round
-Teleport to player
-Teleport everyone to you
-Teleport player to player
-Reset lobby timer
-Start round
-Set lobby timer
-Set speed
-Set model
-Set texture
-Set size
-Create AI
-Set round timer", "Select", "Cancel");
 }
 
 void SetPlayerRole(Player p, Role@ targetRole, int texture = -1)
@@ -164,13 +112,34 @@ void SetPlayerRole(Player p, Role@ targetRole, int texture = -1)
 			p.Console("heal");
 			
 			for(int i = 0; i < targetRole.items.size(); i++) {
-				Items it = world.CreateItem(targetRole.items[i]);
-				if(it != NULL) {
-					if(targetRole.items[i] == "Radio Transceiver") { 
-						it.SetState(1000.0);
-						it.SetState2(targetRole.radioChannel);
+				if(targetRole.items[i].findFirst(";") >= 0) {
+					Items backpack = world.CreateItem("Backpack");
+					if(backpack != NULL) {
+						array<string>@ values = targetRole.items[i].split(";");
+						for(int x = 0; x < values.size(); x++) {
+							Items it = world.CreateItem(values[x]);
+							if(it != NULL) {
+								if(values[x] == "Radio Transceiver") {
+									it.SetState(1000.0);
+									it.SetState2(targetRole.radioChannel);
+								}
+								
+								backpack.PushItem(it);
+							}
+						}
 					}
-					it.SetPicker(p);
+					
+					backpack.SetPicker(p);
+				}
+				else {
+					Items it = world.CreateItem(targetRole.items[i]);
+					if(it != NULL) {
+						if(targetRole.items[i] == "Radio Transceiver") { 
+							it.SetState(1000.0);
+							it.SetState2(targetRole.radioChannel);
+						}
+						it.SetPicker(p);
+					}
 				}
 			}
 			
@@ -955,7 +924,6 @@ namespace PlayerCallbacks
 	{
 		RegisterCallback(PlayerConnect_c, "PlayerCallbacks::OnConnect");
 		RegisterCallback(PlayerDisconnect_c, "PlayerCallbacks::OnDisconnect");
-		RegisterCallback(PlayerDialogAction_c, "PlayerCallbacks::OnDialog");
 		RegisterCallback(PlayerChat_c, "PlayerCallbacks::OnChat");
 		RegisterCallback(PlayerHitPlayer_c, "PlayerCallbacks::OnHitPlayer");
 		RegisterCallback(PlayerDeath_c, "PlayerCallbacks::OnDeath");
@@ -980,6 +948,7 @@ namespace PlayerCallbacks
 	
 	void OnConnect(Player player)
 	{
+		if(player == NULL) return; // Player was kicked on connection
 		if(GlobalBans.Contains(parseUInt(player.GetSteamID()), IPToDecimal(player.GetIP())) >= 0)
 		{
 			player.Kick(CODE_BANNED);
@@ -1010,8 +979,9 @@ namespace PlayerCallbacks
 
 	void OnDisconnect(Player player)
 	{
+		if(player == NULL) return; // Player was kicked on connection
 		info_Player@ playerInfo = GetPlayerInfo(player);
-		if(@playerInfo == null) return; // Player was kicked on connection
+		if(@playerInfo == null) return;
 		DestructRoleMessage(player);
 		StopPlayerAnimation(player);
 		RemoveTimer(playerInfo.logicTimer);
@@ -1019,350 +989,7 @@ namespace PlayerCallbacks
 		RemovePlayerInfo(player);
 		connPlayers.removeAt(connPlayers.find(player));
 	}
-	
-	void OnDialog(Player p, int dialogid, bool result, string input, int sel)
-	{
-		switch(dialogid)
-		{
-			case DIALOG_ADMIN_AUTH:
-			{
-				if(!result) return;
-				if(input == ADMIN_PASSWORD) {
-					p.SetAdmin(true);
-					ShowAdminPanel(p);
-				}
-				else p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_AUTH, "Login as admin", "Enter the password for authorization:\n&col[ff0000]Wrong password", "Enter", "Cancel");
-				break;
-			}
-			case DIALOG_ADMIN_PANEL:
-			{
-				if(!result) return;
-				switch(sel)
-				{
-					case 0: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_BAN, "Ban player", "Enter player index", "Ban", "Cancel");
-						break;
-					}
-					case 1: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_KICKPLAYER, "Kick player", "Enter player index", "Kick", "Cancel");
-						break;
-					}
-					case 2: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_UNBAN, "Unban player", "Enter IP or SteamID", "Unban", "Cancel");
-						break;
-					}
-					case 3: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_GIVEROLE, "Give role", "Enter player index and role index. Example [1 2]", "Enter", "Cancel");
-						break;
-					}
-					case 4: {
-						Round::SpawnWave();
-						break;
-					}
-					case 5: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_GIVEITEM, "Give item", "Enter player index and item by comma [1,SR-556]", "Give", "Cancel");
-						break;
-					}
-					case 6: {
-						p.ShowDialog(DIALOG_TYPE_MESSAGE, DIALOG_ADMIN_PANEL_RESTARTSERVER, "Restart server", "Are you really sure to restart the server?", "Yes", "Cancel");
-						break;
-					}
-					case 7: {
-						p.ShowDialog(DIALOG_TYPE_MESSAGE, DIALOG_ADMIN_PANEL_RESTARTROUND, "Restart round", "Are you really sure to restart the round?", "Yes", "Cancel");
-						break;
-					}
-					case 8: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_TPTOPLAYER, "Teleport to player", "Enter player index", "Enter", "Cancel");
-						break;
-					}
-					case 9: {
-						p.ShowDialog(DIALOG_TYPE_MESSAGE, DIALOG_ADMIN_PANEL_TPEVERY, "Teleport everyone", "Are you really sure to teleport everyone?", "Yes", "Cancel");
-						break;
-					}
-					case 10: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_TPPTOP, "Teleport player to player", "Enter player index and player index. Example [1 2]", "Enter", "Cancel");
-						break;
-					}
-					case 11: {
-						Lobby::SetTimer(LOBBY_START_TIMER);
-						break;
-					}
-					case 12: {
-						p.ShowDialog(DIALOG_TYPE_MESSAGE, DIALOG_ADMIN_PANEL_STARTROUND, "Start?", "Are you really sure to start the round?", "Enter", "Cancel");
-						break;
-					}
-					case 13: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_SETLOBBYTIMER, "Set lobby timer", "Enter lobby seconds.", "Enter", "Cancel");
-						break;
-					}
-					case 14: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_SPEED, "Set speed", "Enter your speed (0.0 is default)", "Enter", "Cancel");
-						break;
-					}
-					case 15: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_SETMODEL, "Set model", "Enter model ID (1-14)", "Enter", "Cancel");
-						break;
-					}
-					case 16: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_SETTEXTURE, "Set texture", "Enter texture ID", "Enter", "Cancel");
-						break;
-					}
-					case 17: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_SIZE, "Set size", "Enter your size (0.0 is default)", "Enter", "Cancel");
-						break;
-					}
-					case 18: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_AI, "Create AI", "Enter AI nickname", "Enter", "Cancel");
-						break;
-					}
-					case 19: {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_SETROUNDTIMER, "Set round timer", "Enter round seconds", "Enter", "Cancel");
-						break;
-					}
-				}
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_SIZE:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				if(input.length() > 0) {
-					p.SetModelSize(parseFloat(input));
-				}
-				break;
-			}
-			
-			case DIALOG_ADMIN_PANEL_SETTEXTURE:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				if(input.length() > 0) {
-					p.SetModelTexture(int(clamp(parseInt(input), 1, 31)));
-				}
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_SETMODEL:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				if(input.length() > 0) {
-					p.SetModel(int(clamp(parseInt(input), 1, 16)));
-				}
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_SPEED:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				if(input.length() > 0) {
-					p.SetSpeedMultiplier(parseFloat(input));
-				}
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_SETLOBBYTIMER:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				if(input.length() > 0) {
-					Lobby::SetTimer(parseInt(input));
-					chat.SendPlayer(p, "Success!");
-				}
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_STARTROUND:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				Round::Start();
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_SETROUNDTIMER:
-			{
-				if(!result || input == "") { ShowAdminPanel(p); return; }
-				Round::SetTimer(parseUInt(input));
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_AI:
-			{
-				if(!result || input == "") { ShowAdminPanel(p); return; }
-				world.CreateBot(input);
-				ShowAdminPanel(p);
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_BAN:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				int playerid = parseInt(input);
-				if(playerid <= MAX_PLAYERS) {
-					Player dest = GetPlayer(playerid);
-					if(dest != NULL && dest != p) {
-						p.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_PANEL_BANCONFIRM, "Ban player confirmation", "Player: " + dest.GetName() + " ("+playerid+")\nSteam ID: " + dest.GetSteamID() + "\nIP Address: " + dest.GetIP() +"\nEnter ban reason:", "Ban", "Cancel", false);
-						p.SetDialogData(dest.GetName() + "\n" + dest.GetSteamID() + "\n" + dest.GetIP());
-						return;
-					}
-				}
-				chat.SendPlayer(p, "Can't find player.");
-				ShowAdminPanel(p);
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_UNBAN:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				
-				
-				if(input.findFirst(".") >= 0 ? GlobalBans.Remove("", input) : GlobalBans.Remove(input, "")) {
-					chat.SendPlayer(p, "Player successfully unbanned");
-					GlobalBans.Save();
-				}
-				else chat.SendPlayer(p, "Can't find banned player");
-				ShowAdminPanel(p);
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_BANCONFIRM:
-			{
-				if(!result || input.findFirst(":::") >= 0) { ShowAdminPanel(p); return; }
-				
-				string IP = SplitString(p.GetDialogData(), "\n", 2);
-				GlobalBans.Push(SplitString(p.GetDialogData(), "\n", 1), IP, input);
-				GlobalBans.Save();
-				chat.Send("&colr[200 0 0]Administrator &r[]" + p.GetName() + "&r[] banned " + SplitString(p.GetDialogData(), " ", 0) + ". Reason: " + input);
-				ShowAdminPanel(p);
 
-				for(int i = connPlayers.size() - 1; i >= 0; i--) {
-					if(connPlayers[i].GetIP() == IP) { 
-						connPlayers[i].Kick(CODE_BANNED);
-					}
-				}
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_KICKPLAYER:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				int playerid = parseInt(input);
-				if(playerid <= MAX_PLAYERS) {
-					Player dest = GetPlayer(playerid);
-					if(dest != NULL && dest != p) {
-						chat.SendPlayer(p, "Player " + dest.GetName() + " has been kicked.");
-						dest.Kick();
-						ShowAdminPanel(p);
-						return;
-					}
-				}
-				chat.SendPlayer(p, "Can't find player.");
-				ShowAdminPanel(p);
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_GIVEROLE:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				array<string>@ values = input.split(" ");
-				if(values.size() >= 2) {
-					int playerid = parseInt(values[0]);
-					if(playerid <= MAX_PLAYERS) {
-						Player dest = GetPlayer(playerid);
-						if(dest != NULL) {
-							Role@ role = Roles::Find(parseInt(values[1]));
-							if(@role != null) {
-								SetPlayerRole(dest, role);
-								chat.SendPlayer(p, role.name + " has been successfully given to " + dest.GetName());
-							}
-							ShowAdminPanel(p);
-							return;
-						}
-					}
-				}
-				chat.SendPlayer(p, "Can't find player or role");
-				ShowAdminPanel(p);
-				break;
-			}
-			
-			case DIALOG_ADMIN_PANEL_GIVEITEM:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				array<string>@ values = input.split(",");
-				if(values.size() >= 2) {
-					int playerid = parseInt(values[0]);
-					if(playerid <= MAX_PLAYERS) {
-						Player dest = GetPlayer(playerid);
-						if(dest != NULL) {
-							Items it = world.CreateItem(values[1]);
-							if(it != NULL) {
-								it.SetPicker(dest);
-								chat.SendPlayer(p, it.GetTemplateName() + " has been successfully given to " + dest.GetName());
-							}
-							ShowAdminPanel(p);
-							return;
-						}
-					}
-				}
-				chat.SendPlayer(p, "Can't find player or item");
-				ShowAdminPanel(p);
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_RESTARTSERVER:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				Round::End();
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_RESTARTROUND:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				Round::Reload();
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_TPTOPLAYER:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				int playerid = parseInt(input);
-				if(playerid <= MAX_PLAYERS) {
-					Player dest = GetPlayer(playerid);
-					if(dest != NULL) {
-						Entity destEnt = dest.GetEntity();
-						p.SetPosition(destEnt.PositionX(), destEnt.PositionY(), destEnt.PositionZ(), dest.GetRoom());
-						chat.SendPlayer(p, "Success!");
-						return;
-					}
-				}
-				chat.SendPlayer(p, "Can't find player.");
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_TPEVERY:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				for(int i = 0; i < connPlayers.size(); i++) {
-					Entity destEnt = p.GetEntity();
-					connPlayers[i].SetPosition(destEnt.PositionX(), destEnt.PositionY(), destEnt.PositionZ(), p.GetRoom());
-				}
-				chat.SendPlayer(p, "Success!");
-				break;
-			}
-			case DIALOG_ADMIN_PANEL_TPPTOP:
-			{
-				if(!result) { ShowAdminPanel(p); return; }
-				array<string>@ values = input.split(" ");
-				if(values.size() >= 2) {
-					int playerid = parseInt(values[0]);
-					if(playerid <= MAX_PLAYERS) {
-						Player dest = GetPlayer(playerid);
-						if(dest != NULL) {
-							int playerid2 = parseInt(values[1]);
-							if(playerid2 <= MAX_PLAYERS) {
-								Player dest2 = GetPlayer(playerid2);
-								if(dest2 != NULL) {
-									Entity destEnt = dest2.GetEntity();
-									dest.SetPosition(destEnt.PositionX(), destEnt.PositionY(), destEnt.PositionZ(), dest2.GetRoom());
-						
-									chat.SendPlayer(p, dest.GetName() + " has been successfully teleported to " + dest2.GetName());
-									ShowAdminPanel(p);
-								}
-							}
-							return;
-						}
-					}
-				}
-				
-				ShowAdminPanel(p);
-				chat.SendPlayer(p, "Can't find player or role");
-				break;
-			}
-		}
-	}
-	
 	bool OnChat(Player player, string message)
 	{
 		if(message.substr(0, 1) == "/") 
@@ -1377,11 +1004,23 @@ namespace PlayerCallbacks
 					return false;
 				}
 				
-				if(command == "admin")
+				if(command == "suicide")
 				{
-					if(!player.IsAdmin()) player.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_AUTH, "Login as admin", "Enter the password for authorization:", "Enter", "Cancel");
-					else ShowAdminPanel(player);
-					return false;
+					if(!player.IsDead()) {
+						const string[] phrases =
+						{
+							"died of a heart attack",
+							"decided to gnaw their veins",
+							"forgot how to breathe",
+							"died of diarrhea",
+							"slipped and hit his head",
+							"took a nap"
+						};
+						
+						chat.Send(player.GetName() + " " + phrases[rand(0, phrases.size() - 1)]);
+						audio.PlaySoundForPlayer(player, "SFX\\SCP\\914\\PlayerDeath.ogg");
+						audio.Play3DSound("SFX\\SCP\\914\\PlayerDeath.ogg", player, 15.0, 0.8);
+					}
 				}
 				
 				if(command == "removeobject")
@@ -1394,8 +1033,7 @@ namespace PlayerCallbacks
 				}
 				if(command == "object")
 				{
-					if(!player.IsAdmin()) player.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_AUTH, "Login as admin", "Enter the password for authorization:", "Enter", "Cancel");
-					else
+					if(player.IsAdmin())
 					{
 						if(playerInfo.editObject != NULL)
 						{
@@ -1417,8 +1055,7 @@ namespace PlayerCallbacks
 				
 				if(command == "setobjectdata")
 				{
-					if(!player.IsAdmin()) player.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_AUTH, "Login as admin", "Enter the password for authorization:", "Enter", "Cancel");
-					else
+					if(player.IsAdmin())
 					{
 						if(playerInfo.editObject != NULL && values.size() >= 5)
 						{
@@ -1432,8 +1069,7 @@ namespace PlayerCallbacks
 				
 				if(command == "capture")
 				{
-					if(!player.IsAdmin()) player.ShowDialog(DIALOG_TYPE_INPUT, DIALOG_ADMIN_AUTH, "Login as admin", "Enter the password for authorization:", "Enter", "Cancel");
-					else if(!player.IsDead())
+					if(!player.IsDead() && player.IsAdmin())
 					{
 						if(values.size() >= 2) {
 							int playerid = parseInt(values[1]);
@@ -1462,14 +1098,6 @@ namespace PlayerCallbacks
 							player.SendMessage("You left the player.");
 						}
 					}
-					return false;
-				}
-				
-				if(command == "testgui")
-				{
-					GUIElement rect = graphics.CreateRect(player, frand(0.0, 0.7), frand(0.0, 0.7), frand(0.1, 0.3), frand(0.1, 0.3));
-					rect.SetColor(rand(255), rand(255), rand(255));
-					rect.SetSelectable(true);
 					return false;
 				}
 			}

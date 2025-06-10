@@ -356,7 +356,8 @@ enum RoomIdentifiers
 	r_room2_closets_2 = 113,
 	//
 	r_gate_a_b = 114,
-	r_RESERVED = 115
+	r_cont3_009 = 115,
+	r_RESERVED = 300 // Rooms ID to 300 are reserved for future versions of UERM
 }
 
 enum EventIdentifiers
@@ -434,7 +435,8 @@ enum EventIdentifiers
 	e_tesla = 72,
 	e_trick = 73, e_trick_item = 74,
 	e_dimension_106 = 75, e_dimension_1499 = 76,
-	e_gate_a_b = 77
+	e_gate_a_b = 77,
+	e_cont3_009 = 78
 }
 
 enum ItemsIdentifiers
@@ -604,7 +606,9 @@ enum ItemsIdentifiers
 	it_handcuffs = 120,
 	it_m134 = 121,
 	it_remington = 122,
-	it_RESERVED	= 123, it_RESERVED2 = 124
+	it_fine513 = 123,
+	it_backpack = 124,
+	it_RESERVETO = 500 // Items ID to 500 are reserved for future versions of UERM
 }
 
 enum DoorTypes
@@ -672,7 +676,8 @@ enum KickCodes
 	CODE_BANNED				= 8,
 	CODE_KICKED				= 9,
 	CODE_RESTART			= 10,
-	CODE_INVALIDCONTENT		= 11
+	CODE_INVALIDCONTENT		= 11,
+	CODE_CUSTOMERROR		= 12
 }
 
 enum NPCTypes
@@ -716,7 +721,23 @@ enum KeysTypes
 	KEY_G = 0x1000,
 	KEY_H = 0x2000,
 	KEY_J = 0x4000,
-	KEY_K = 0x8000
+	KEY_K = 0x8000,
+	KEY_1 = 0x10000,
+	KEY_2 = 0x20000,
+	KEY_3 = 0x40000,
+	KEY_4 = 0x80000,
+	KEY_5 = 0x100000,
+	KEY_6 = 0x200000,
+	KEY_7 = 0x400000,
+	KEY_8 = 0x800000,
+	KEY_9 = 0x1000000,
+	KEY_0 = 0x2000000,
+	KEY_F9 = 0x4000000,
+	KEY_F10 = 0x8000000,
+	KEY_Z = 0x10000000,
+	KEY_X = 0x20000000,
+	KEY_JUMP = 0x40000000,
+	KEY_RSHIFT = -2147483648
 }
 
 bool IsKeyPressed(int key, int newmask, int prevmask) { return (newmask & key) != 0 && (prevmask & key) == 0; }

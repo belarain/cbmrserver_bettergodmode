@@ -15,6 +15,11 @@
 			"scp": true
 		},
 		{
+			"id": "009",
+			"image": "Achv009.png",
+			"scp": true
+		},
+		{
 			"id": "012",
 			"image": "Achv012.png",
 			"scp": true
@@ -236,6 +241,46 @@
 		}
 	],
 	"translations": {
+		"005": {
+			"name": "Trespasser",
+			"description": "Found the Skeleton Key."
+		},
+		"008": {
+			"name": "Biohazard",
+			"description": "Entered the Zombie Plague's chamber."
+		},
+		"009": {
+			"name": "Ice-olated Incident",
+			"description": "Found a room contaminated with red ice."
+		},
+		"012": {
+			"name": "Scribe",
+			"description": "Came across the Bad Composition."
+		},
+		"035": {
+			"name": "Curtains Down",
+			"description": "Talked to the Possessive Mask."
+		},
+		"049": {
+			"name": "Doctor, Doctor!",
+			"description": "Found the cure."
+		},
+		"055": {
+			"name": "Anti-Meme",
+			"description": "Recontained SCP-055."
+		},
+		"066": {
+			"name": "\"Eric?\"",
+			"description": "Interacted with Eric's Toy."
+		},
+		"079": {
+			"name": "Deductive Reasoning",
+			"description": "Made a deal with the Old AI."
+		},
+		"096": {
+			"name": "Don't Look at Me",
+			"description": "Avoided the Shy Guy's face."
+		},
 		"106": {
 			"name": "A Decayed March",
 			"description": "Encountered the Old Man."
@@ -264,6 +309,10 @@
 			"name": "Crystal Death",
 			"description": "Got close to the Contagious Crystal."
 		},
+		"420j": {
+			"name": "\"Reggae, man.\"",
+			"description": "Smoked some good ass shit."
+		},
 		"427": {
 			"name": "Light of Life",
 			"description": "Found and equipped the \"Lovecraftian Locket\"."
@@ -283,6 +332,10 @@
 		"714": {
 			"name": "Mental Exhaustion",
 			"description": "Found and equipped the Jaded Ring."
+		},
+		"789j": {
+			"name": "\"by researcher james, age 11\"",
+			"description": "Protected your butt from the Butt Ghost."
 		},
 		"860": {
 			"name": "Two-faced Grove",
@@ -324,57 +377,13 @@
 			"name": "The Final Solution",
 			"description": "Touched the Atrocity Skull."
 		},
-		"1499": {
-			"name": "Screams Of The Present",
-			"description": "Wore a GP-5 Gas Mask."
-		},
-		"005": {
-			"name": "Trespasser",
-			"description": "Found the Skeleton Key."
-		},
-		"008": {
-			"name": "Biohazard",
-			"description": "Entered the Zombie Plague's chamber."
-		},
-		"012": {
-			"name": "Scribe",
-			"description": "Came across the Bad Composition."
-		},
-		"035": {
-			"name": "Curtains Down",
-			"description": "Talked to the Possessive Mask."
-		},
-		"049": {
-			"name": "Doctor, Doctor!",
-			"description": "Found the cure."
-		},
-		"055": {
-			"name": "Anti-Meme",
-			"description": "Recontained SCP-055."
-		},
-		"066": {
-			"name": "\"Eric?\"",
-			"description": "Interacted with Eric's Toy."
-		},
-		"079": {
-			"name": "Deductive Reasoning",
-			"description": "Made a deal with the Old AI."
-		},
-		"096": {
-			"name": "Don't Look at Me",
-			"description": "Avoided the Shy Guy's face."
-		},
-		"420j": {
-			"name": "\"Reggae, man.\"",
-			"description": "Smoked some good ass shit."
-		},
-		"789j": {
-			"name": "\"by researcher james, age 11\"",
-			"description": "Protected your butt from the Butt Ghost."
-		},
 		"1162arc": {
 			"name": "Pieces of the Past",
 			"description": "Took from the Hole In The Wall."
+		},
+		"1499": {
+			"name": "Screams Of The Present",
+			"description": "Wore a GP-5 Gas Mask."
 		},
 		"console": {
 			"name": "Fair Play",
@@ -398,7 +407,7 @@
 		},
 		"o5": {
 			"name": "Control Over the Foundation",
-			"description": "Entered O5 Council's Office."
+			"description": "Entered the Command Meeting Room."
 		},
 		"pocketdimension": {
 			"name": "No Man's Land",

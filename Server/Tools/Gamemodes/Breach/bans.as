@@ -1,16 +1,18 @@
 class BanValue
 {
 	BanValue() { }
-	BanValue(uint64 steamid, int ip, string reason = "")
+	BanValue(uint64 steamid, int ip, string reason = "", uint64 time = 0)
 	{
 		bSteamID = steamid;
 		bIP = ip;
 		bReason = reason;
+		bTime = time;
 	}
 	
 	uint64 bSteamID;
 	int bIP;
 	string bReason;
+	uint64 bTime;
 }
 
 class BanList
@@ -30,7 +32,7 @@ class BanList
 				string line = f.readLine();
 				
 				array<string>@ values = line.split(":::");
-				if(@values != null && values.size() >= 3) Push(parseUInt(values[0]), parseInt(values[1]), values[2]);
+				if(@values != null && values.size() >= 3) Push(parseUInt(values[0]), parseInt(values[1]), values[2], values.size() < 4 ? 0 : parseInt(values[3]));
 			}
 			
 			f.close();
@@ -40,12 +42,12 @@ class BanList
 	array<BanValue> bans;
 	string filename;
 	
-	void Push(uint64 steamid, int ip, string reason = "") {
-		bans.push_back(BanValue(steamid, ip, reason));
+	void Push(uint64 steamid, int ip, string reason = "", uint64 time = 0) {
+		bans.push_back(BanValue(steamid, ip, reason, time));
 	}
 	
-	void Push(string steamid, string ip, string reason = "") {
-		Push(parseUInt(steamid), IPToDecimal(ip), reason);
+	void Push(string steamid, string ip, string reason = "", uint64 time = 0) {
+		Push(parseUInt(steamid), IPToDecimal(ip), reason, time);
 	}
 	
 	bool Remove(uint64 steamid = 0, int ip = 0) {
@@ -71,7 +73,7 @@ class BanList
 		{
 			uint size = bans.size();
 			for(int i = 0; i < size; i++) {
-				f.writeString(formatUInt(bans[i].bSteamID) + ":::" + formatInt(bans[i].bIP) + ":::" + bans[i].bReason + "\n");
+				f.writeString(formatUInt(bans[i].bSteamID) + ":::" + formatInt(bans[i].bIP) + ":::" + bans[i].bReason + ":::" + bans[i].bTime + "\n");
 			}
 			f.close();
 			return true;
@@ -82,8 +84,15 @@ class BanList
 	int Contains(uint64 steamid = 0, int ip = 0)
 	{
 		uint size = bans.size();
-		for(int i = 0; i < size; i++) {
-			if(bans[i].bIP == ip || bans[i].bSteamID == steamid) return i;
+		for(int i = size - 1; i >= 0; i--) {
+			if(bans[i].bIP == ip || bans[i].bSteamID == steamid) {
+				if(bans[i].bTime > 0 && bans[i].bTime < datetime().time)
+				{
+					bans.removeAt(i);
+					continue;
+				}
+				return i;
+			}
 		}
 		return -1;
 	}

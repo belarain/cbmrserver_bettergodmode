@@ -6,11 +6,13 @@
 #include "round.as"
 #include "lobby.as"
 #include "bans.as"
+#include "adminpanel.as"
 
 void OnInitialize() // Initialize when script loads. Don't use WORLD functions there.
 {
 	RegisterAllCallbacks();
-	
+
+	AdminPanel::Register();
 	PlayerCallbacks::Register();
 	Lobby::Create();
 

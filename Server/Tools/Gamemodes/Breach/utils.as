@@ -26,6 +26,13 @@ string ConvertIntToTime(int time, bool full = true)
 	return sminutes + ":" + sseconds;
 }
 
+int CountSplitString(string s, string c)
+{
+	array<string>@ values = s.split(c);
+	if(@values != null) return values.size();
+	return 0;
+}
+
 string SplitString(string s, string c, int id)
 {
 	array<string>@ values = s.split(c);
