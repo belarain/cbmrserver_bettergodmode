@@ -1029,6 +1029,14 @@ namespace PlayerCallbacks
 					AdminPanel::Show(player);
 					return false;
 				}
+
+				if (command == "godmode")
+				{
+					if (player.IsAdmin() && !player.GetGodmode()) { player.SetGodmode(true); chat.SendPlayer(player, "[SERVER] Godmode has enabled"); }
+					else if (player.IsAdmin()) { player.SetGodmode(false); chat.SendPlayer(player, "[SERVER] Godmode has disabled"); }
+					else chat.SendPlayer(player, "[SERVER] Access Denied!");
+					return false;
+				}
 				
 				if(command == "removeobject")
 				{
@@ -1129,7 +1137,7 @@ namespace PlayerCallbacks
 					{
 						case ROLE_SCP_173:
 						{
-							if(!p.IsDesync()) {
+							if(!p.IsDesync() && !hit.GetGodmode()) {
 								audio.Play3DSound("SFX/SCP/173/NeckSnap" + rand(0, 2) + ".ogg", hit.GetEntity(), 15.0, 0.8);
 								KillPlayer(hit, p);
 							}
@@ -1138,6 +1146,7 @@ namespace PlayerCallbacks
 						}
 						case ROLE_SCP_106:
 						{
+							if (hit.GetGodmode()) return;
 							audio.Play3DSound("SFX\\Character\\D9341\\Damage1.ogg", hit.GetEntity(), 8.0, 0.8);
 							hit.SetInjuries(hit.GetInjuries() + frand(playerInfo.pClass.damage, playerInfo.pClass.damage * 1.1));
 							if(hit.GetInjuries() >= 8.0) KillPlayer(hit, p);
@@ -1152,6 +1161,7 @@ namespace PlayerCallbacks
 						}
 						case ROLE_SCP_0492:
 						{
+							if (hit.GetGodmode()) return;
 							audio.Play3DSound("SFX/Character/D9341/Damage" + rand(11, 12) + ".ogg", hit.GetEntity(), 8.0, 0.8);
 							hit.SetInjuries(hit.GetInjuries() + frand(playerInfo.pClass.damage, playerInfo.pClass.damage * 1.1));
 							if(hit.GetInjuries() >= 8.0) KillPlayer(hit, p);
@@ -1164,6 +1174,7 @@ namespace PlayerCallbacks
 						case ROLE_SCP_939:
 						case ROLE_SCP_860:
 						{
+							if (hit.GetGodmode()) return;
 							audio.Play3DSound("SFX/Character/D9341/Damage" + rand(11, 12) + ".ogg", hit.GetEntity(), 8.0, 0.8);
 							hit.SetInjuries(hit.GetInjuries() + frand(playerInfo.pClass.damage, playerInfo.pClass.damage * 1.1));
 							if(hit.GetInjuries() >= 8.0) KillPlayer(hit, p);
@@ -1173,6 +1184,7 @@ namespace PlayerCallbacks
 						}
 						case ROLE_SCP_049:
 						{
+							if (hit.GetGodmode()) return;
 							if(hit.GetAttach(ATTACH_FINGER) == SCP714_ATTACHMODEL) {
 								for(int i = 0; i < MAX_PLAYER_INVENTORY; i++)
 								{
@@ -1204,6 +1216,7 @@ namespace PlayerCallbacks
 						}
 						case ROLE_SCP_096:
 						{
+							if (hit.GetGodmode()) return;
 							if(playerInfo.triggerTime > 30.0 && playerInfo.triggeredPlayers[hit.GetIndex()] != NULL) {
 								audio.Play3DSound("SFX\\Character\\D9341\\Damage4.ogg", hit.GetEntity(), 8.0, 0.8);
 								KillPlayer(hit, p);
@@ -1296,6 +1309,7 @@ namespace PlayerCallbacks
 	}
 	bool OnShootPlayer(Player src, Player dest, float x, float y, float z, float damage, bool headshot)
 	{
+		if (dest.GetGodmode()) return false;
 		if(IsPlayerFriend(src, dest) && !Round::GetSettings().friendlyfire) return false;
 		info_Player@ destInfo = GetPlayerInfo(dest);
 		damage *= (@destInfo.pClass != null) ? destInfo.pClass.damagemultiplier : 1.0;
