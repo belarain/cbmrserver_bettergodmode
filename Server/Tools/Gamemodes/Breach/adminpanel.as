@@ -25,10 +25,10 @@ namespace AdminPanel
 		FileSystem.makeDir("admins");
 		FileSystem.changeCurrentPath("admins");
 		
-		RegisterCallback(PlayerKeyAction_c, "AdminPanel::OnPlayerKeyAction");
-		RegisterCallback(PlayerConnect_c, "AdminPanel::OnPlayerConnect");
-		RegisterCallback(PlayerPressPlayer_c, "AdminPanel::OnPlayerPressPlayer");
-		RegisterCallback(ServerConsole_c, "AdminPanel::OnConsole");
+		RegisterCallback(PlayerKeyAction_c, OnPlayerKeyAction);
+		RegisterCallback(PlayerConnect_c, OnPlayerConnect);
+		RegisterCallback(PlayerPressPlayer_c, OnPlayerPressPlayer);
+		RegisterCallback(ServerConsole_c, OnConsole);
 		Load();
 	}
 	
