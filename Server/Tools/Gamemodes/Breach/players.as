@@ -922,22 +922,22 @@ namespace PlayerCallbacks
 {
 	void Register()
 	{
-		RegisterCallback(PlayerConnect_c, "PlayerCallbacks::OnConnect");
-		RegisterCallback(PlayerDisconnect_c, "PlayerCallbacks::OnDisconnect");
-		RegisterCallback(PlayerChat_c, "PlayerCallbacks::OnChat");
-		RegisterCallback(PlayerHitPlayer_c, "PlayerCallbacks::OnHitPlayer");
-		RegisterCallback(PlayerDeath_c, "PlayerCallbacks::OnDeath");
-		RegisterCallback(PlayerShootPlayer_c, "PlayerCallbacks::OnShootPlayer");
-		RegisterCallback(PlayerExploreCorpse_c, "PlayerCallbacks::OnExploreCorpse");
-		RegisterCallback(PlayerTakeItem_c, "PlayerCallbacks::OnTakeItem");
-		RegisterCallback(PlayerDropItem_c, "PlayerCallbacks::OnDropItem");
-		RegisterCallback(PlayerUpdate_c, "PlayerCallbacks::OnUpdate");
-		RegisterCallback(PlayerClickObject_c, "PlayerCallbacks::OnClickObject");
-		RegisterCallback(PlayerUseDoorButton_c, "PlayerCallbacks::OnUseDoorButton");
-		RegisterCallback(PlayerUseItem_c, "PlayerCallbacks::OnUseItem");
-		RegisterCallback(PlayerUse914_c, "PlayerCallbacks::OnUse914");
-		RegisterCallback(PlayerAttachesUpdate_c, "PlayerCallbacks::OnAttachesUpdate");
-		RegisterCallback(PlayerClickGui_c, "PlayerCallbacks::OnClickElement");
+		RegisterCallback(PlayerConnect_c, OnConnect);
+		RegisterCallback(PlayerDisconnect_c, OnDisconnect);
+		RegisterCallback(PlayerChat_c, OnChat);
+		RegisterCallback(PlayerHitPlayer_c, OnHitPlayer);
+		RegisterCallback(PlayerDeath_c, OnDeath);
+		RegisterCallback(PlayerShootPlayer_c, OnShootPlayer);
+		RegisterCallback(PlayerExploreCorpse_c, OnExploreCorpse);
+		RegisterCallback(PlayerTakeItem_c, OnTakeItem);
+		RegisterCallback(PlayerDropItem_c, OnDropItem);
+		RegisterCallback(PlayerUpdate_c, OnUpdate);
+		RegisterCallback(PlayerClickObject_c, OnClickObject);
+		RegisterCallback(PlayerUseDoorButton_c, OnUseDoorButton);
+		RegisterCallback(PlayerUseItem_c, OnUseItem);
+		RegisterCallback(PlayerUse914_c, OnUse914);
+		RegisterCallback(PlayerAttachesUpdate_c, OnAttachesUpdate);
+		RegisterCallback(PlayerClickGui_c, OnClickElement);
 	}
 	
 	void OnClickElement(Player player, GUIElement element)
