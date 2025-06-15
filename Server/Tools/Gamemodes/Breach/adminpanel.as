@@ -405,6 +405,7 @@ namespace AdminPanel
 				if(GetPanelPlayer(p) != NULL) {
 					Items it = world.CreateItem(input);
 					if(it != NULL) {
+						it.SetPicker(GetPanelPlayer(p));
 						chat.SendPlayer(p, it.GetTemplateName() + " has been successfully given to " + GetPanelPlayer(p).GetName());
 					}
 					else chat.SendPlayer(p, "Item doesn't exist!");
