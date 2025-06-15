@@ -488,39 +488,26 @@ namespace Round
 		}
 		
 		// LCZ
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2_427_714_860_1025), vector3(-607, 77.3, 633.0), "Level 2 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2_427_714_860_1025), vector3(558, 202.7, -762.0), "Level 4 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_test_lcz), vector3(-354.9, 160.7, 281.0), "Glock");
+		
+		bool has914 = (world.GetRoomByIdentifier(r_cont1_914) != NULL);
+		
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2_427_714_860_1025), vector3(-607, 77.3, 633.0), has914 ? "Level 1 Key Card" : "Level 3 Key Card");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_closets), vector3(752.8, 121.1, 526.3), "Compact First Aid Kit");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_closets), vector3(737.8, 228.4, 764.5), "Level 2 Key Card");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_closets), vector3(737.8, 228.4, 764.5), has914 ? "Level 1 Key Card" : "Level 3 Key Card");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_005), vector3(504.3, 181.7, -506.1), rand(0, 1) == 0 ? "MP5" : "KRISS Vector");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_914), vector3(541.3, 188.7, 130.1), "Compact First Aid Kit");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_914), vector3(-1334.3, 188.7, -160.5), rand(0, 1) == 0 ? "Glock" : "Remington");
-		if(rand(3) == 0) CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_2_lcz), vector3(632.4, 90, -571.5), "Level 3 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont3_372), vector3(353.2, 188.9, 572.0), "Level 3 Key Card");
-		if(rand(3) == 0) CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_js), vector3(842.0, 210.3, -924.2), "Glock");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2_500_1499), vector3(-653.0, 168.4, -766.7), rand(0, 1) == 0 ? "Glock" : "Level 3 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_storage), vector3(358.5, 189.4, 260.7), "Level 2 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_storage), vector3(-676.5, 300.4, 158.7), "Five-Seven");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2c_066_1162_arc), vector3(-38.5, 311.4, 824.7), "Level 2 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2_1123), vector3(542.0, 125.0, -936), "Five-Seven");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_205), vector3(-357.0, 70.0, 150), "Glock");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_205), vector3(206.0, 190.0, 180), "Level 2 Key Card");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2_500_1499), vector3(-653.0, 168.4, -766.7), has914 ? "Level 1 Key Card" : "Level 3 Key Card");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_205), vector3(206.0, 190.0, 180), has914 ? "Level 1 Key Card" : "Level 2 Key Card");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont1_205), vector3(-975.0, -15.0, 650), "Level 3 Key Card");
 		
-		if(rand(0, 1) == 0) CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(192.0, 192.0, -260), "Level 3 Key Card");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(192.0, 96.0, 461), "Compact First Aid Kit");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(192.0, 96.0, -224), "Compact First Aid Kit");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(192.0, 96.0, 461), has914 ? "Compact First Aid Kit" : "Level 3 Key Card");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(192.0, 96.0, -224), rand(0, 2) == 0 ? "Glock" : "Compact First Aid Kit");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(192.0, 192.0, 110), "Compact First Aid Kit");
-		CreateItemPoint(items, world.GetRoomByIdentifier(r_room1_storage), vector3(-437.618, 130.0, -598), "Glock");
-		
-		CreateItemPoint(items, world.GetRoomByIdentifier(10000), vector3(0, 123, 595.0), "P90");
-		CreateItemPoint(items, world.GetRoomByIdentifier(10000), vector3(-414, 105, 476.0), "Glock");
-		CreateItemPoint(items, world.GetRoomByIdentifier(10000), vector3(360, 99, 498.0), "Remington");
-		CreateItemPoint(items, world.GetRoomByIdentifier(10000), vector3(360, 99, 498.0), "Level 4 Key Card");
+		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_sl), vector3(841.0, 640.0, -25.0), "Glock");
 		
 		// HCZ
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_shaft), vector3(1930.0, 225.0, 128), "Glock");
-		if(rand(5) == 0) CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_shaft), vector3(996.0, 160.0, -102), "Level 5 Key Card");
+		if(rand(10) == 0) CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_shaft), vector3(996.0, 160.0, -102), "Level 5 Key Card");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_room2_2_ez), vector3(800.0, -48.0, 368), rand(0, 1) == 0 ? "MP5" : "KRISS Vector");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2c_096), vector3(-1169.0, -563.0, 721), rand(0, 3) == 0 ? "Level 3 Key Card" : "Remington");
 		CreateItemPoint(items, world.GetRoomByIdentifier(r_cont2c_096), vector3(14.0, -390, 1437), rand(0, 2) == 0 ? "Level 5 Key Card" : (rand(0, 1) == 0 ? "MP5" : "KRISS Vector"));
